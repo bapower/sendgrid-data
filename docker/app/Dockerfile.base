@@ -1,0 +1,18 @@
+FROM php:7.1-fpm-alpine
+
+RUN curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
+    chmod +x /usr/local/bin/composer
+
+RUN apk --no-cache add postgresql-libs postgresql-dev && \
+    docker-php-ext-install pdo_pgsql && apk del postgresql-dev
+
+COPY src/composer.json /src/composer.lock /tmp/
+
+WORKDIR /tmp
+RUN composer install --no-autoloader --no-scripts && \
+    date +%s > /tmp/vendor/STAMP
+
+COPY docker/app/entrypoint.sh /bin/
+WORKDIR /html/
+
+RUN chmod +x /bin/entrypoint.sh

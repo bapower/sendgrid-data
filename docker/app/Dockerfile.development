@@ -1,0 +1,11 @@
+FROM docker.fiveone.com:5000/sendgrid-tracking:base
+
+RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS && \
+    pecl install xdebug && docker-php-ext-enable xdebug && apk del .phpize-deps
+
+COPY entrypoint_dev.sh /bin/
+
+RUN chmod +x /bin/entrypoint_dev.sh
+
+ENTRYPOINT ["entrypoint_dev.sh"]
+CMD ["php-fpm"]

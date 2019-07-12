@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    image: docker.fiveone.com:5000/sendgrid-tracking:development
+    volumes:
+      - ./src:/html
+    env_file:
+      - docker/db/env
+    environment:
+      - APP_ENV
+      - APP_DEBUG
+      - APP_KEY
+    depends_on:
+      - db
+    command: ./vendor/bin/phpunit -c phpunit.xml
+  db:
+    image: docker.fiveone.com:5000/sendgrid-tracking-db:latest
+    env_file:
+      - docker/db/env

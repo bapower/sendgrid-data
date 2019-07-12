@@ -1,0 +1,9 @@
+FROM docker.fiveone.com:5000/sendgrid-tracking:base
+
+COPY src /html/
+
+RUN mv /tmp/vendor /html/ && composer install
+
+VOLUME ["/html/public"]
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["php-fpm"]
